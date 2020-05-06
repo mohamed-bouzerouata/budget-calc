@@ -1,9 +1,9 @@
 import React from 'react'
 
-export const Alerts = () => {
+export const Alerts = ({type, text}) => {
     return (
-        <div>
-            welcome from Alerts
-        </div>
+        <>
+            <div className={`alert alert-${type}`}>{text}</div>
+        </>
     )
 }
