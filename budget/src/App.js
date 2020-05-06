@@ -12,13 +12,35 @@ const stateValues = [
 
 function App() {
   let [expenses, setExpenses] = useState(stateValues);
+  let [charge, setCharge] = useState('');
+  let [amount, setAmount] = useState('')
+  
+  const handleChangeCharge = (e) => {
+    setCharge(e.target.value)
+  }
+  const handleChangeAmount = (e) => {
+    setAmount(e.target.value)
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(charge !== '' && amount !== '') {
+      
+    } else {
+      //alert function begin 
+    }
+  }
 
   return (
     <>
       <h1>Budget Calculator</h1>
       <main className='App'>
         <Alerts />
-        <ExpensesForm />
+        <ExpensesForm
+            expenses={expenses} 
+            handleChangeCharge={handleChangeCharge} 
+            handleChangeAmount={handleChangeAmount}
+            handleSubmit={handleSubmit}/>
+
         <ExpensesLists  expenses={expenses}/>
       </main>
       <h1>

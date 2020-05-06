@@ -13,10 +13,12 @@ export const ExpensesLists = ({expenses}) => {
                 />
                 );
             })};
-            <button className='btn'>
-                Clear Expenses
-                <MdDelete />
-            </button>
+            {expenses.length > 0 && (
+                    <button className="btn">
+                    clear expenses
+                    <MdDelete className="btn-icon" />
+                    </button>
+                )}
         </>  
     )
 }
