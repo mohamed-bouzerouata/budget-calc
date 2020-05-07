@@ -3,11 +3,12 @@ import './App.css';
 import { Alerts } from './components/Alerts';
 import { ExpensesForm } from './components/ExpensesForm';
 import { ExpensesLists } from './components/ExpensesLists';
+import { v4 as uuidv4 } from 'uuid'
 
 const stateValues = [
-  {id: 1, charge: 'rent', amount: 1200 },
-  {id: 2, charge: 'grocery', amount: 400 },
-  {id: 3  , charge: 'grocery', amount: 400 },
+  {id: uuidv4(), charge: 'rent', amount: 1200 },
+  {id: uuidv4(), charge: 'grocery', amount: 400 },
+  {id: uuidv4(), charge: 'grocery', amount: 400 },
 ]
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
   let [alert, setAlert] = useState({
     show : false
   })
-
+  let [edit, setEdit] = useState(true)
+  let [id, setId] = useState(0)
   const handleAlert = ({type, text}) => {
     setAlert({show: true, type, text});
     setTimeout(() => {
@@ -35,16 +37,31 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if(charge !== '' && amount !== '') {
-      let newItem = {id: new Date(), charge, amount};
+      let newItem = {id: uuidv4(), charge, amount};
       setExpenses([...expenses, newItem]);
       handleAlert({type: 'success', text : 'item added'});
-      setCharge('');
+      setCharge('')
       setAmount('')
     } else {
       handleAlert({type: 'danger', text: 'fill the cases' })
     }
   }
+  const handleDelete = (id) => {
+    const deleteItem = expenses.filter((el) => el.id !== id)
+    setExpenses(deleteItem);
+  }
+  const handleClearItems = () => {
+    setExpenses([])
+  }
+  const handleEdit = (id) => {
+    const editItem = expenses.find(i => i.id === id)
+    let { charge , amount} = editItem
 
+    setCharge(charge)
+    setAmount(amount)
+    setEdit(false)
+    setId(id)
+  }
   return (
     <>
       {alert.show && <Alerts type={alert.type} text={alert.text}/>}
@@ -54,9 +71,16 @@ function App() {
             expenses={expenses} 
             handleChangeCharge={handleChangeCharge} 
             handleChangeAmount={handleChangeAmount}
-            handleSubmit={handleSubmit}/>
+            handleSubmit={handleSubmit}
+            edit={edit}
+            />
 
-        <ExpensesLists  expenses={expenses}/>
+        <ExpensesLists  
+            expenses={expenses}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+            handleClearItems={handleClearItems}
+            handleEdit={handleEdit}/>
       </main>
       <h1>
         total spending : 
