@@ -13,13 +13,14 @@ const stateValues = [
 
 function App() {
   let [expenses, setExpenses] = useState(stateValues);
-  let [charge, setCharge] = useState('');
-  let [amount, setAmount] = useState('')
+  const [charge, setCharge] = useState('');
+  const [amount, setAmount] = useState('')
   let [alert, setAlert] = useState({
     show : false
   })
-  let [edit, setEdit] = useState(true)
+  let [edit, setEdit] = useState(false)
   let [id, setId] = useState(0)
+
   const handleAlert = ({type, text}) => {
     setAlert({show: true, type, text});
     setTimeout(() => {
@@ -36,12 +37,23 @@ function App() {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(charge !== '' && amount !== '') {
-      let newItem = {id: uuidv4(), charge, amount};
-      setExpenses([...expenses, newItem]);
-      handleAlert({type: 'success', text : 'item added'});
-      setCharge('')
-      setAmount('')
+    if (charge !== '' && amount > 0 ) {
+      if(edit) {
+        const currItem = expenses.map(item => {
+          return item.id === id ? {...item, charge, amount} : item;
+        })
+        setExpenses(currItem)
+        handleAlert({type: 'success', text: 'Item edited' })
+        setEdit(false);
+      } else {
+        const newItem = { id: uuidv4(), charge, amount};
+        setExpenses([...expenses, newItem]);
+        handleAlert({type: 'success', text : 'item added'});
+      }
+
+      setCharge("");
+      setAmount("");
+
     } else {
       handleAlert({type: 'danger', text: 'fill the cases' })
     }
@@ -59,7 +71,8 @@ function App() {
 
     setCharge(charge)
     setAmount(amount)
-    setEdit(false)
+    setEdit(true)
+
     setId(id)
   }
   return (
@@ -72,6 +85,8 @@ function App() {
             handleChangeCharge={handleChangeCharge} 
             handleChangeAmount={handleChangeAmount}
             handleSubmit={handleSubmit}
+            charge={charge}
+            amount={amount}
             edit={edit}
             />
 
